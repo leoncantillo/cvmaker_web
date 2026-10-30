@@ -131,3 +131,74 @@ export interface PhotoResponse {
   photoUrl: string | null;
   success?: boolean;
 }
+
+export interface CVPersonalInfo {
+  fullName: string;
+  headline?: string;
+  email: string;
+  phone?: string;
+  location?: string;
+  photoUrl?: string | null;
+  links?: ProfileLink[];
+}
+
+export interface GenericSectionItem {
+  id?: string;
+  role?: string;
+  company?: string;
+  period?: string;
+  startDate?: string;
+  endDate?: string | null;
+  description?: string;
+  institution?: string;
+  degree?: string;
+  name?: string;
+  category?: 'technical' | 'soft';
+  level?: string;
+  title?: string;
+  language?: string;
+  proficiency?: string;
+  issuer?: string;
+  issueDate?: string;
+  relationship?: string;
+  date?: string;
+  contact?: string;
+  url?: string;
+}
+
+export interface CVSection {
+  id: string;
+  type: string;
+  title: string;
+  visible: boolean;
+  paginationRule: string;
+  content?: string;
+  items?: GenericSectionItem[];
+}
+
+export interface CVHeader {
+  id: string;
+  title: string;
+  template: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CV {
+  id: string;
+  userId: string;
+  title: string;
+  template: string;
+  personalInfo: CVPersonalInfo;
+  sections: CVSection[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CVListResponse {
+  cvs: CVHeader[];
+}
+
+export interface CVResponse {
+  cv: CV;
+}

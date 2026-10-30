@@ -13,7 +13,7 @@ function Navbar(): ReactElement {
   };
 
   return (
-    <nav className="main-menu" aria-label="Main Navigation">
+    <nav className="main-menu no-print" aria-label="Main Navigation">
       <div className="nav-brand">
         <Link to="/">CVmaker</Link>
       </div>
@@ -23,6 +23,9 @@ function Navbar(): ReactElement {
         </li>
         {isAuthenticated ? (
           <>
+            <li>
+              <Link to="/cvs">Mis CVs</Link>
+            </li>
             <li>
               <Link to="/profile">Mi Perfil</Link>
             </li>

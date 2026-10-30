@@ -2,6 +2,8 @@ import { env } from '../../config/env';
 import type {
   ApiErrorResponse,
   AuthResponse,
+  CVListResponse,
+  CVResponse,
   HealthResponse,
   PhotoResponse,
   Profile,
@@ -163,6 +165,33 @@ export class ApiClient {
 
   deletePhoto(): Promise<PhotoResponse> {
     return this.delete<PhotoResponse>('/api/profile/photo');
+  }
+
+  listCVs(): Promise<CVListResponse> {
+    return this.get<CVListResponse>('/api/cvs');
+  }
+
+  createCV(title?: string, importProfile = true): Promise<CVResponse> {
+    return this.post<CVResponse, { title?: string; importProfile?: boolean }>('/api/cvs', {
+      ...(title !== undefined ? { title } : {}),
+      importProfile,
+    });
+  }
+
+  getCV(id: string): Promise<CVResponse> {
+    return this.get<CVResponse>(`/api/cvs/${id}`);
+  }
+
+  updateCV(id: string, data: Record<string, unknown>): Promise<CVResponse> {
+    return this.put<CVResponse, Record<string, unknown>>(`/api/cvs/${id}`, data);
+  }
+
+  duplicateCV(id: string): Promise<CVResponse> {
+    return this.post<CVResponse, Record<string, never>>(`/api/cvs/${id}/duplicate`, {});
+  }
+
+  deleteCV(id: string): Promise<{ success: boolean; id: string }> {
+    return this.delete<{ success: boolean; id: string }>(`/api/cvs/${id}`);
   }
 }
 

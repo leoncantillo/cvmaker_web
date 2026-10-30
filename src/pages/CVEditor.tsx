@@ -754,8 +754,115 @@ export default function CVEditor(): ReactElement {
                       </div>
                     )}
 
+                    {/* Professional references */}
+                    {sec.type === 'references' && (
+                      <div className="items-list">
+                        {(sec.items || []).map((reference: GenericSectionItem, referenceIdx: number) => (
+                          <div key={referenceIdx} className="item-subcard">
+                            <div className="subcard-header">
+                              <span className="subcard-title">
+                                <strong>{reference.name || 'Nueva referencia'}</strong>
+                              </span>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  const copy = [...sections];
+                                  const s = copy[idx];
+                                  if (s) {
+                                    copy[idx] = {
+                                      ...s,
+                                      items: (s.items || []).filter(
+                                        (_: GenericSectionItem, i: number) => i !== referenceIdx,
+                                      ),
+                                    };
+                                    setSections(copy);
+                                  }
+                                }}
+                                className="btn-remove-compact"
+                                title="Eliminar referencia"
+                                aria-label="Eliminar referencia"
+                              >
+                                <FontAwesomeIcon icon={faTrashCan} />
+                              </button>
+                            </div>
+                            <div className="form-row">
+                              <input
+                                type="text"
+                                placeholder="Nombre de la referencia"
+                                value={reference.name || ''}
+                                onChange={(e) => {
+                                  const copy = [...sections];
+                                  const s = copy[idx];
+                                  if (s?.items?.[referenceIdx]) {
+                                    s.items[referenceIdx] = {
+                                      ...s.items[referenceIdx],
+                                      name: e.target.value,
+                                    };
+                                    setSections(copy);
+                                  }
+                                }}
+                              />
+                              <input
+                                type="text"
+                                placeholder="Empresa o relación"
+                                value={reference.relationship || reference.company || ''}
+                                onChange={(e) => {
+                                  const copy = [...sections];
+                                  const s = copy[idx];
+                                  if (s?.items?.[referenceIdx]) {
+                                    s.items[referenceIdx] = {
+                                      ...s.items[referenceIdx],
+                                      relationship: e.target.value,
+                                    };
+                                    setSections(copy);
+                                  }
+                                }}
+                              />
+                              <input
+                                type="text"
+                                placeholder="Email o teléfono"
+                                value={reference.contact || ''}
+                                onChange={(e) => {
+                                  const copy = [...sections];
+                                  const s = copy[idx];
+                                  if (s?.items?.[referenceIdx]) {
+                                    s.items[referenceIdx] = {
+                                      ...s.items[referenceIdx],
+                                      contact: e.target.value,
+                                    };
+                                    setSections(copy);
+                                  }
+                                }}
+                              />
+                            </div>
+                          </div>
+                        ))}
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const copy = [...sections];
+                            const s = copy[idx];
+                            if (s) {
+                              copy[idx] = {
+                                ...s,
+                                items: [
+                                  ...(s.items || []),
+                                  { name: '', relationship: '', contact: '' },
+                                ],
+                              };
+                              setSections(copy);
+                            }
+                          }}
+                          className="btn-secondary btn-sm"
+                        >
+                          <FontAwesomeIcon icon={faPlus} />
+                          <span>Añadir Referencia</span>
+                        </button>
+                      </div>
+                    )}
+
                     {/* Generic sections (Certifications, Languages, Projects, etc.) */}
-                    {!['summary', 'custom', 'experience', 'education', 'skills'].includes(sec.type) && (
+                    {!['summary', 'custom', 'experience', 'education', 'skills', 'references'].includes(sec.type) && (
                       <div className="items-list">
                         {(sec.items || []).map((item: GenericSectionItem, itemIdx: number) => (
                           <div key={itemIdx} className="item-subcard">
@@ -972,7 +1079,7 @@ export default function CVEditor(): ReactElement {
                             <div key={i} className="a4-item">
                               <div className="a4-item-heading">
                                 <strong>{item.name || item.title || item.language}</strong>
-                                <span>{item.issuer || item.proficiency || item.relationship || ''}</span>
+                                <span>{item.issuer || item.proficiency || item.relationship || item.company || ''}</span>
                                 <span>{item.date || item.issueDate || item.contact || ''}</span>
                               </div>
                               {item.description && <p className="a4-item-desc">{item.description}</p>}

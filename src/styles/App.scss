@@ -251,6 +251,27 @@
 }
 
 /* Banners */
+
+/* Light‑theme scrollbar */
+html.light ::-webkit-scrollbar {
+  width: 8px;
+  background: #e2e8f0;
+}
+html.light ::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+/* Ensure inputs respect light variables */
+html.light input,
+html.light textarea,
+html.light select {
+  background-color: var(--input-bg);
+  color: var(--input-text);
+  border: 1px solid var(--input-border);
+}
+
+
 .status-banner {
   padding: 0.75rem 1rem;
   border-radius: 6px;

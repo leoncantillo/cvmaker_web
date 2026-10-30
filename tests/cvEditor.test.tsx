@@ -213,4 +213,51 @@ describe('Dashboard and CV Editor UI', () => {
       expect(screen.getByRole('button', { name: /ocultar del cv/i })).toBeInTheDocument();
     }
   });
+
+  it('edits a professional reference contact from the CV editor', async () => {
+    vi.spyOn(apiClient, 'getCV').mockResolvedValueOnce({
+      cv: {
+        id: 'cv-references',
+        userId: 'u-1',
+        title: 'CV con referencias',
+        template: 'classic',
+        personalInfo: { fullName: 'Ana', email: 'ana@example.com' },
+        sections: [
+          {
+            id: 'sec-references',
+            type: 'references',
+            title: 'Referencias profesionales',
+            visible: true,
+            paginationRule: 'break',
+            items: [
+              {
+                name: 'María Pérez',
+                relationship: 'Gerente en Acme',
+                contact: 'maria@acme.com',
+              },
+            ],
+          },
+        ],
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      },
+    });
+
+    render(
+      <AuthProvider>
+        <HashRouter>
+          <CVEditor />
+        </HashRouter>
+      </AuthProvider>,
+    );
+
+    const contactInput = await screen.findByPlaceholderText('Email o teléfono');
+    expect(contactInput).toHaveValue('maria@acme.com');
+    expect(screen.getByText('maria@acme.com')).toBeInTheDocument();
+
+    fireEvent.change(contactInput, { target: { value: '+57 300 123 4567' } });
+
+    expect(contactInput).toHaveValue('+57 300 123 4567');
+    expect(screen.getByText('+57 300 123 4567')).toBeInTheDocument();
+  });
 });

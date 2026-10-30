@@ -4,6 +4,8 @@ import Layout from './components/Layout';
 import Navbar from './components/Navbar';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { AuthProvider } from './context/AuthContext';
+import CVEditor from './pages/CVEditor';
+import Dashboard from './pages/Dashboard';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import ProfilePage from './pages/Profile';
@@ -26,6 +28,22 @@ function App(): ReactElement {
                 element={
                   <ProtectedRoute>
                     <ProfilePage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/cvs"
+                element={
+                  <ProtectedRoute>
+                    <Dashboard />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/cvs/:id"
+                element={
+                  <ProtectedRoute>
+                    <CVEditor />
                   </ProtectedRoute>
                 }
               />

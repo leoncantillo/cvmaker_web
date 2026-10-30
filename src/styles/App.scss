@@ -394,3 +394,559 @@
     width: 100%;
   }
 }
+
+
+/* Dashboard styles */
+.dashboard-container {
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+  text-align: left;
+
+  .dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+
+    h2 {
+      margin: 0;
+      color: #1a1a1a;
+    }
+
+    .subtitle {
+      color: #666;
+      margin: 0.35rem 0 0 0;
+    }
+  }
+}
+
+.empty-state-card {
+  background: #ffffff;
+  border: 2px dashed #ddd;
+  border-radius: 12px;
+  padding: 3rem 2rem;
+  text-align: center;
+
+  .empty-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+  }
+
+  h3 {
+    margin-top: 0;
+    color: #333;
+  }
+
+  p {
+    color: #666;
+    max-width: 480px;
+    margin: 0.5rem auto 1.5rem auto;
+  }
+}
+
+.cv-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.cv-card {
+  background: #ffffff;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 1.25rem;
+  transition: transform 0.2s, box-shadow 0.2s;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+  }
+
+  .cv-badge {
+    display: inline-block;
+    font-size: 0.75rem;
+    background: #eef2ff;
+    color: #4f46e5;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+
+  .cv-card-title {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.15rem;
+    color: #1a1a1a;
+  }
+
+  .cv-date {
+    font-size: 0.8rem;
+    color: #888;
+    margin: 0;
+  }
+
+  .cv-card-actions {
+    margin-top: 1.25rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid #f0f0f0;
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+
+    .btn-sm {
+      padding: 0.35rem 0.65rem;
+      font-size: 0.85rem;
+    }
+  }
+}
+
+/* CV Editor Split View Layout */
+.cv-editor-layout {
+  width: 100%;
+}
+
+.editor-topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1.5rem;
+  background: #ffffff;
+  border-bottom: 1px solid #e0e0e0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+
+  .topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    .cv-title-input {
+      font-size: 1.2rem;
+      font-weight: bold;
+      border: 1px solid transparent;
+      padding: 0.3rem 0.6rem;
+      border-radius: 4px;
+
+      &:hover, &:focus {
+        border-color: #ccc;
+        background: #f9f9f9;
+      }
+    }
+  }
+
+  .topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    .save-status-badge {
+      font-size: 0.85rem;
+      font-weight: 500;
+
+      &.saved {
+        color: #059669;
+      }
+      &.saving {
+        color: #d97706;
+      }
+      &.error {
+        color: #dc2626;
+      }
+    }
+
+    .btn-print {
+      background: #059669;
+      &:hover {
+        background: #047857;
+      }
+    }
+  }
+}
+
+.editor-split-container {
+  display: flex;
+  gap: 2rem;
+  padding: 1.5rem;
+  max-width: 1600px;
+  margin: 0 auto;
+  align-items: flex-start;
+}
+
+.editor-panel {
+  flex: 1;
+  max-width: 600px;
+  text-align: left;
+
+  .editor-card {
+    background: #ffffff;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+    padding: 1.25rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+
+    h3 {
+      margin-top: 0;
+      color: #333;
+    }
+  }
+
+  .card-header-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+
+    h3 {
+      margin: 0;
+    }
+  }
+}
+
+.section-editor-block {
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+  background: #fafafa;
+  overflow: hidden;
+
+  .section-block-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.6rem 0.75rem;
+    background: #f0f0f0;
+    border-bottom: 1px solid #ddd;
+
+    .section-meta {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+
+      .btn-icon {
+        background: none;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        padding: 0.2rem 0.4rem;
+        cursor: pointer;
+        font-size: 0.75rem;
+
+        &:disabled {
+          opacity: 0.3;
+          cursor: not-allowed;
+        }
+      }
+
+      .section-title-input {
+        font-weight: 600;
+        font-size: 0.95rem;
+        border: 1px solid #ccc;
+        padding: 0.25rem 0.5rem;
+        border-radius: 4px;
+      }
+    }
+
+    .section-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+
+      .visibility-label {
+        font-size: 0.85rem;
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+        cursor: pointer;
+      }
+    }
+  }
+
+  .section-block-body {
+    padding: 0.85rem;
+
+    .pagination-rule-row {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.75rem;
+      font-size: 0.85rem;
+      color: #666;
+
+      select {
+        padding: 0.2rem 0.4rem;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+        font-size: 0.8rem;
+      }
+    }
+
+    .item-subcard {
+      border: 1px solid #e5e5e5;
+      background: #ffffff;
+      border-radius: 4px;
+      padding: 0.65rem;
+      margin-bottom: 0.65rem;
+
+      .subcard-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0.4rem;
+      }
+
+      input, textarea {
+        width: 100%;
+        margin-bottom: 0.4rem;
+        box-sizing: border-box;
+      }
+    }
+
+    .skills-pill-editor {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-bottom: 0.75rem;
+
+      .skill-chip {
+        display: flex;
+        align-items: center;
+        background: #fff;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        padding: 0.15rem 0.3rem;
+
+        input {
+          border: none;
+          outline: none;
+          padding: 0.15rem;
+          font-size: 0.85rem;
+          width: 80px;
+        }
+
+        .btn-chip-delete {
+          background: none;
+          border: none;
+          cursor: pointer;
+          color: #888;
+          font-size: 0.75rem;
+        }
+      }
+    }
+  }
+}
+
+/* Right Side: A4 Live Preview & Printable Sheet */
+.preview-panel {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  position: sticky;
+  top: 4.5rem;
+}
+
+.a4-sheet {
+  width: 210mm;
+  min-height: 297mm;
+  background: #ffffff;
+  padding: 18mm 16mm;
+  box-sizing: border-box;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.12);
+  border-radius: 2px;
+  text-align: left;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  color: #222222;
+  line-height: 1.45;
+
+  .a4-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    border-bottom: 2px solid #2563eb;
+    padding-bottom: 12px;
+    margin-bottom: 14px;
+
+    .a4-name {
+      margin: 0;
+      font-size: 24pt;
+      font-weight: 800;
+      color: #1e3a8a;
+      letter-spacing: -0.5px;
+    }
+
+    .a4-headline {
+      margin: 4px 0 8px 0;
+      font-size: 13pt;
+      color: #4b5563;
+      font-weight: 500;
+    }
+
+    .a4-contact-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      font-size: 9pt;
+      color: #6b7280;
+
+      span {
+        display: inline-flex;
+        align-items: center;
+      }
+    }
+
+    .a4-photo-wrapper {
+      width: 75px;
+      height: 75px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 2px solid #2563eb;
+      flex-shrink: 0;
+      margin-left: 14px;
+
+      .a4-photo {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    }
+  }
+
+  .a4-section {
+    margin-bottom: 14px;
+
+    &.avoid-page-break {
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+
+    .a4-section-title {
+      font-size: 11pt;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: #1e3a8a;
+      border-bottom: 1px solid #e5e7eb;
+      padding-bottom: 3px;
+      margin: 0 0 8px 0;
+      letter-spacing: 0.5px;
+    }
+
+    .a4-section-text {
+      font-size: 9.5pt;
+      color: #374151;
+      margin: 0;
+      white-space: pre-wrap;
+    }
+
+    .a4-items-container {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .a4-item {
+      font-size: 9.5pt;
+
+      .a4-item-heading {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 8px;
+
+        .a4-item-role {
+          color: #111827;
+        }
+
+        .a4-item-company {
+          color: #4b5563;
+          font-style: italic;
+        }
+
+        .a4-item-date {
+          color: #6b7280;
+          font-size: 8.5pt;
+          margin-left: auto;
+        }
+      }
+
+      .a4-item-desc {
+        margin: 3px 0 0 0;
+        color: #4b5563;
+        font-size: 9pt;
+        white-space: pre-wrap;
+      }
+    }
+
+    .a4-skills-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+
+      .a4-skill-tag {
+        background: #f3f4f6;
+        color: #1f2937;
+        font-size: 8.5pt;
+        padding: 2px 7px;
+        border-radius: 4px;
+        border: 1px solid #e5e7eb;
+      }
+    }
+  }
+}
+
+/* Print CSS */
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 12mm 15mm;
+  }
+
+  body, html {
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #ffffff !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  .app-main-content {
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .editor-split-container {
+    display: block !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .preview-panel {
+    display: block !important;
+    position: static !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .a4-sheet {
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    width: 100% !important;
+    min-height: auto !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .avoid-page-break {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+}

@@ -1,5 +1,13 @@
 import { env } from '../../config/env';
-import type { ApiErrorResponse, HealthResponse } from './types';
+import type {
+  ApiErrorResponse,
+  AuthResponse,
+  HealthResponse,
+  PhotoResponse,
+  Profile,
+  ProfileResponse,
+  UserResponse,
+} from './types';
 
 export class ApiError extends Error {
   constructor(
@@ -53,15 +61,35 @@ async function readApiError(response: Response): Promise<ApiError> {
   );
 }
 
-class ApiClient {
+export class ApiClient {
+  private authToken: string | null = null;
+
+  setAuthToken(token: string | null): void {
+    this.authToken = token;
+  }
+
+  getAuthToken(): string | null {
+    return this.authToken;
+  }
+
   async request<T>(path: string, options: RequestInit = {}): Promise<T> {
     let response: Response;
+
+    const headers: Record<string, string> = {};
+
+    if (!(options.body instanceof FormData) && options.body !== undefined) {
+      headers['Content-Type'] = 'application/json';
+    }
+
+    if (this.authToken) {
+      headers['Authorization'] = `Bearer ${this.authToken}`;
+    }
 
     try {
       response = await fetch(`${env.apiUrl}${path}`, {
         ...options,
         headers: {
-          ...(options.body === undefined ? {} : { 'Content-Type': 'application/json' }),
+          ...headers,
           ...options.headers,
         },
       });
@@ -102,6 +130,39 @@ class ApiClient {
 
   checkHealth(): Promise<HealthResponse> {
     return this.get<HealthResponse>('/api/health');
+  }
+
+  register(credentials: { email: string; password: string }): Promise<AuthResponse> {
+    return this.post<AuthResponse, { email: string; password: string }>('/api/auth/register', credentials);
+  }
+
+  login(credentials: { email: string; password: string }): Promise<AuthResponse> {
+    return this.post<AuthResponse, { email: string; password: string }>('/api/auth/login', credentials);
+  }
+
+  getMe(): Promise<UserResponse> {
+    return this.get<UserResponse>('/api/auth/me');
+  }
+
+  getProfile(): Promise<ProfileResponse> {
+    return this.get<ProfileResponse>('/api/profile');
+  }
+
+  updateProfile(profileData: Partial<Profile>): Promise<ProfileResponse> {
+    return this.put<ProfileResponse, Partial<Profile>>('/api/profile', profileData);
+  }
+
+  uploadPhoto(file: File): Promise<PhotoResponse> {
+    const formData = new FormData();
+    formData.append('photo', file);
+    return this.request<PhotoResponse>('/api/profile/photo', {
+      method: 'POST',
+      body: formData,
+    });
+  }
+
+  deletePhoto(): Promise<PhotoResponse> {
+    return this.delete<PhotoResponse>('/api/profile/photo');
   }
 }
 

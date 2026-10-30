@@ -1,5 +1,27 @@
 import { useEffect, useRef, useState, type ReactElement } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faArrowLeft,
+  faCheck,
+  faSpinner,
+  faTriangleExclamation,
+  faPrint,
+  faUser,
+  faListCheck,
+  faPlus,
+  faChevronUp,
+  faChevronDown,
+  faEllipsisVertical,
+  faEye,
+  faEyeSlash,
+  faFileLines,
+  faTrashCan,
+  faEnvelope,
+  faPhone,
+  faLocationDot,
+  faGlobe,
+} from '@fortawesome/free-solid-svg-icons';
 import { env } from '../config/env';
 import { apiClient, ApiError } from '../services/api/client';
 import type { CVPersonalInfo, CVSection, GenericSectionItem } from '../services/api/types';
@@ -17,9 +39,28 @@ export default function CVEditor(): ReactElement {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('saved');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [openMenuIdx, setOpenMenuIdx] = useState<number | null>(null);
 
   const isInitialMount = useRef(true);
   const saveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Close kebab menu on outside click or escape
+  useEffect(() => {
+    const handleDocumentClick = (): void => {
+      setOpenMenuIdx(null);
+    };
+    const handleKeyDown = (e: KeyboardEvent): void => {
+      if (e.key === 'Escape') {
+        setOpenMenuIdx(null);
+      }
+    };
+    document.addEventListener('click', handleDocumentClick);
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('click', handleDocumentClick);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
 
   useEffect(() => {
     let isMounted = true;
@@ -101,6 +142,7 @@ export default function CVEditor(): ReactElement {
       copy.splice(targetIndex, 0, moved);
       setSections(copy);
     }
+    setOpenMenuIdx(null);
   };
 
   const handleToggleSectionVisibility = (index: number): void => {
@@ -110,11 +152,24 @@ export default function CVEditor(): ReactElement {
       copy[index] = { ...sec, visible: !sec.visible };
       setSections(copy);
     }
+    setOpenMenuIdx(null);
+  };
+
+  const handleTogglePagination = (index: number): void => {
+    const copy = [...sections];
+    const sec = copy[index];
+    if (sec) {
+      const nextRule = sec.paginationRule === 'avoid-break' ? 'break' : 'avoid-break';
+      copy[index] = { ...sec, paginationRule: nextRule };
+      setSections(copy);
+    }
+    setOpenMenuIdx(null);
   };
 
   const handleDeleteSection = (index: number): void => {
     if (!confirm('¿Deseas eliminar esta sección del currículum?')) return;
     setSections(sections.filter((_, i) => i !== index));
+    setOpenMenuIdx(null);
   };
 
   const handleAddCustomSection = (): void => {
@@ -130,14 +185,25 @@ export default function CVEditor(): ReactElement {
   };
 
   if (isLoading) {
-    return <div className="loading-banner">Cargando editor de CV...</div>;
+    return (
+      <div className="loading-banner">
+        <FontAwesomeIcon icon={faSpinner} spin />
+        <span>Cargando editor de CV...</span>
+      </div>
+    );
   }
 
   if (errorMessage) {
     return (
       <div className="error-banner">
-        {errorMessage}
-        <button type="button" onClick={() => { void navigate('/cvs'); }} className="btn-secondary" style={{ marginLeft: '1rem' }}>
+        <FontAwesomeIcon icon={faTriangleExclamation} />
+        <span>{errorMessage}</span>
+        <button
+          type="button"
+          onClick={() => { void navigate('/cvs'); }}
+          className="btn-secondary"
+          style={{ marginLeft: '1rem' }}
+        >
           Volver a Mis CVs
         </button>
       </div>
@@ -158,7 +224,8 @@ export default function CVEditor(): ReactElement {
             onClick={() => { void navigate('/cvs'); }}
             className="btn-secondary btn-sm"
           >
-            ← Mis CVs
+            <FontAwesomeIcon icon={faArrowLeft} />
+            <span>Mis CVs</span>
           </button>
           <input
             type="text"
@@ -171,16 +238,32 @@ export default function CVEditor(): ReactElement {
 
         <div className="topbar-right">
           <span className={`save-status-badge ${saveStatus}`}>
-            {saveStatus === 'saving' && 'Guardando...'}
-            {saveStatus === 'saved' && '✓ Guardado'}
-            {saveStatus === 'error' && '⚠️ Error al guardar'}
+            {saveStatus === 'saving' && (
+              <>
+                <FontAwesomeIcon icon={faSpinner} spin />
+                <span>Guardando...</span>
+              </>
+            )}
+            {saveStatus === 'saved' && (
+              <>
+                <FontAwesomeIcon icon={faCheck} />
+                <span>Guardado</span>
+              </>
+            )}
+            {saveStatus === 'error' && (
+              <>
+                <FontAwesomeIcon icon={faTriangleExclamation} />
+                <span>Error al guardar</span>
+              </>
+            )}
           </span>
           <button
             type="button"
             onClick={handlePrint}
             className="btn-primary btn-print"
           >
-            🖨️ Imprimir / Guardar PDF (A4)
+            <FontAwesomeIcon icon={faPrint} />
+            <span>Imprimir / Guardar PDF (A4)</span>
           </button>
         </div>
       </header>
@@ -190,7 +273,10 @@ export default function CVEditor(): ReactElement {
         {/* Left Side: Form Editor (Hidden when printing) */}
         <div className="editor-panel no-print">
           <div className="editor-card">
-            <h3>👤 Información Personal</h3>
+            <h3>
+              <FontAwesomeIcon icon={faUser} />
+              <span>Información Personal</span>
+            </h3>
             <div className="form-group">
               <label>Nombre Completo</label>
               <input
@@ -241,19 +327,34 @@ export default function CVEditor(): ReactElement {
           {/* Sections List */}
           <div className="editor-card">
             <div className="card-header-flex">
-              <h3>📑 Secciones del Currículum</h3>
+              <h3>
+                <FontAwesomeIcon icon={faListCheck} />
+                <span>Secciones del Currículum</span>
+              </h3>
               <button
                 type="button"
                 onClick={handleAddCustomSection}
                 className="btn-secondary btn-sm"
               >
-                + Sección Personalizada
+                <FontAwesomeIcon icon={faPlus} />
+                <span>Sección Personalizada</span>
               </button>
             </div>
 
             {sections.map((sec, idx) => (
-              <div key={sec.id || idx} className="section-editor-block">
-                <div className="section-block-header">
+              <div
+                key={sec.id || idx}
+                className={`section-editor-block ${sec.visible === false ? 'section-hidden' : ''}`}
+              >
+                {/* Section Header with Right Click and Kebab options */}
+                <div
+                  className="section-block-header"
+                  onContextMenu={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setOpenMenuIdx(openMenuIdx === idx ? null : idx);
+                  }}
+                >
                   <div className="section-meta">
                     <button
                       type="button"
@@ -262,7 +363,7 @@ export default function CVEditor(): ReactElement {
                       className="btn-icon"
                       title="Subir posición"
                     >
-                      ▲
+                      <FontAwesomeIcon icon={faChevronUp} />
                     </button>
                     <button
                       type="button"
@@ -271,7 +372,7 @@ export default function CVEditor(): ReactElement {
                       className="btn-icon"
                       title="Bajar posición"
                     >
-                      ▼
+                      <FontAwesomeIcon icon={faChevronDown} />
                     </button>
                     <input
                       type="text"
@@ -286,47 +387,83 @@ export default function CVEditor(): ReactElement {
                         }
                       }}
                     />
+                    {sec.visible === false && (
+                      <span className="badge-hidden" title="Sección oculta en el CV">
+                        <FontAwesomeIcon icon={faEyeSlash} /> Oculta
+                      </span>
+                    )}
                   </div>
-                  <div className="section-actions">
-                    <label className="visibility-label">
-                      <input
-                        type="checkbox"
-                        checked={sec.visible}
-                        onChange={() => handleToggleSectionVisibility(idx)}
-                      />
-                      {sec.visible ? 'Visible' : 'Oculta'}
-                    </label>
+
+                  {/* Kebab / Context dropdown menu */}
+                  <div
+                    className="section-dropdown-wrapper"
+                    onClick={(e) => e.stopPropagation()}
+                  >
                     <button
                       type="button"
-                      onClick={() => handleDeleteSection(idx)}
-                      className="btn-danger-sm"
-                      title="Eliminar sección"
+                      className="btn-icon btn-kebab"
+                      onClick={() => setOpenMenuIdx(openMenuIdx === idx ? null : idx)}
+                      title="Opciones de sección (clic o clic derecho)"
+                      aria-label="Opciones de sección"
                     >
-                      ✕
+                      <FontAwesomeIcon icon={faEllipsisVertical} />
                     </button>
+
+                    {openMenuIdx === idx && (
+                      <div className="section-kebab-menu" role="menu">
+                        <button
+                          type="button"
+                          className="menu-item"
+                          onClick={() => handleToggleSectionVisibility(idx)}
+                        >
+                          <FontAwesomeIcon icon={sec.visible !== false ? faEyeSlash : faEye} />
+                          <span>{sec.visible !== false ? 'Ocultar del CV' : 'Mostrar en CV'}</span>
+                        </button>
+                        <button
+                          type="button"
+                          className="menu-item"
+                          onClick={() => handleTogglePagination(idx)}
+                        >
+                          <FontAwesomeIcon icon={faFileLines} />
+                          <span>
+                            {sec.paginationRule === 'avoid-break'
+                              ? 'Permitir salto de página'
+                              : 'Mantener junta (sin saltos)'}
+                          </span>
+                        </button>
+                        <button
+                          type="button"
+                          className="menu-item"
+                          disabled={idx === 0}
+                          onClick={() => handleMoveSection(idx, 'up')}
+                        >
+                          <FontAwesomeIcon icon={faChevronUp} />
+                          <span>Subir sección</span>
+                        </button>
+                        <button
+                          type="button"
+                          className="menu-item"
+                          disabled={idx === sections.length - 1}
+                          onClick={() => handleMoveSection(idx, 'down')}
+                        >
+                          <FontAwesomeIcon icon={faChevronDown} />
+                          <span>Bajar sección</span>
+                        </button>
+                        <button
+                          type="button"
+                          className="menu-item danger"
+                          onClick={() => handleDeleteSection(idx)}
+                        >
+                          <FontAwesomeIcon icon={faTrashCan} />
+                          <span>Eliminar sección</span>
+                        </button>
+                      </div>
+                    )}
                   </div>
                 </div>
 
-                {sec.visible && (
+                {sec.visible !== false && (
                   <div className="section-block-body">
-                    <div className="pagination-rule-row">
-                      <label>Paginación A4:</label>
-                      <select
-                        value={sec.paginationRule}
-                        onChange={(e) => {
-                          const copy = [...sections];
-                          const s = copy[idx];
-                          if (s) {
-                            copy[idx] = { ...s, paginationRule: e.target.value };
-                            setSections(copy);
-                          }
-                        }}
-                      >
-                        <option value="break">Permitir salto de página</option>
-                        <option value="avoid-break">Intentar mantener en una sola página</option>
-                      </select>
-                    </div>
-
                     {/* Summary / Custom textarea */}
                     {(sec.type === 'summary' || sec.type === 'custom') && (
                       <div className="form-group">
@@ -352,7 +489,9 @@ export default function CVEditor(): ReactElement {
                         {(sec.items || []).map((exp: GenericSectionItem, expIdx: number) => (
                           <div key={expIdx} className="item-subcard">
                             <div className="subcard-header">
-                              <strong>{exp.role || 'Cargo'} {exp.company ? `- ${exp.company}` : ''}</strong>
+                              <span className="subcard-title">
+                                <strong>{exp.role || 'Cargo'}{exp.company ? ` — ${exp.company}` : ''}</strong>
+                              </span>
                               <button
                                 type="button"
                                 onClick={() => {
@@ -366,9 +505,11 @@ export default function CVEditor(): ReactElement {
                                     setSections(copy);
                                   }
                                 }}
-                                className="btn-danger-sm"
+                                className="btn-remove-compact"
+                                title="Eliminar experiencia"
+                                aria-label="Eliminar experiencia"
                               >
-                                ✕
+                                <FontAwesomeIcon icon={faTrashCan} />
                               </button>
                             </div>
                             <div className="form-row">
@@ -444,7 +585,8 @@ export default function CVEditor(): ReactElement {
                           }}
                           className="btn-secondary btn-sm"
                         >
-                          + Añadir Experiencia
+                          <FontAwesomeIcon icon={faPlus} />
+                          <span>Añadir Experiencia</span>
                         </button>
                       </div>
                     )}
@@ -455,7 +597,9 @@ export default function CVEditor(): ReactElement {
                         {(sec.items || []).map((edu: GenericSectionItem, eduIdx: number) => (
                           <div key={eduIdx} className="item-subcard">
                             <div className="subcard-header">
-                              <strong>{edu.degree || 'Título'} {edu.institution ? `- ${edu.institution}` : ''}</strong>
+                              <span className="subcard-title">
+                                <strong>{edu.degree || 'Título'}{edu.institution ? ` — ${edu.institution}` : ''}</strong>
+                              </span>
                               <button
                                 type="button"
                                 onClick={() => {
@@ -469,9 +613,11 @@ export default function CVEditor(): ReactElement {
                                     setSections(copy);
                                   }
                                 }}
-                                className="btn-danger-sm"
+                                className="btn-remove-compact"
+                                title="Eliminar educación"
+                                aria-label="Eliminar educación"
                               >
-                                ✕
+                                <FontAwesomeIcon icon={faTrashCan} />
                               </button>
                             </div>
                             <div className="form-row">
@@ -519,18 +665,23 @@ export default function CVEditor(): ReactElement {
                           }}
                           className="btn-secondary btn-sm"
                         >
-                          + Añadir Educación
+                          <FontAwesomeIcon icon={faPlus} />
+                          <span>Añadir Educación</span>
                         </button>
                       </div>
                     )}
 
-                    {/* Skills */}
+                    {/* Skills with Technical vs Soft category & compact remove */}
                     {sec.type === 'skills' && (
                       <div className="skills-pill-editor">
                         {(sec.items || []).map((sk: GenericSectionItem, skIdx: number) => (
-                          <div key={skIdx} className="skill-chip">
+                          <div
+                            key={skIdx}
+                            className={`skill-chip ${sk.category === 'soft' ? 'chip-soft' : 'chip-technical'}`}
+                          >
                             <input
                               type="text"
+                              className="skill-chip-input"
                               value={sk.name || ''}
                               onChange={(e) => {
                                 const copy = [...sections];
@@ -542,6 +693,25 @@ export default function CVEditor(): ReactElement {
                               }}
                               placeholder="Habilidad"
                             />
+                            <select
+                              className="skill-cat-select"
+                              value={sk.category || 'technical'}
+                              onChange={(e) => {
+                                const copy = [...sections];
+                                const s = copy[idx];
+                                if (s && s.items) {
+                                  s.items[skIdx] = {
+                                    ...s.items[skIdx],
+                                    category: e.target.value as 'technical' | 'soft',
+                                  };
+                                  setSections(copy);
+                                }
+                              }}
+                              title="Categoría de habilidad"
+                            >
+                              <option value="technical">Técnica</option>
+                              <option value="soft">Blanda</option>
+                            </select>
                             <button
                               type="button"
                               onClick={() => {
@@ -555,9 +725,11 @@ export default function CVEditor(): ReactElement {
                                   setSections(copy);
                                 }
                               }}
-                              className="btn-chip-delete"
+                              className="btn-remove-compact"
+                              title="Eliminar habilidad"
+                              aria-label="Eliminar habilidad"
                             >
-                              ✕
+                              <FontAwesomeIcon icon={faTrashCan} />
                             </button>
                           </div>
                         ))}
@@ -576,7 +748,96 @@ export default function CVEditor(): ReactElement {
                           }}
                           className="btn-secondary btn-sm"
                         >
-                          + Añadir Habilidad
+                          <FontAwesomeIcon icon={faPlus} />
+                          <span>Añadir Habilidad</span>
+                        </button>
+                      </div>
+                    )}
+
+                    {/* Generic sections (Certifications, Languages, Projects, etc.) */}
+                    {!['summary', 'custom', 'experience', 'education', 'skills'].includes(sec.type) && (
+                      <div className="items-list">
+                        {(sec.items || []).map((item: GenericSectionItem, itemIdx: number) => (
+                          <div key={itemIdx} className="item-subcard">
+                            <div className="subcard-header">
+                              <span className="subcard-title">
+                                <strong>{item.name || item.title || item.language || 'Elemento'}</strong>
+                              </span>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  const copy = [...sections];
+                                  const s = copy[idx];
+                                  if (s) {
+                                    copy[idx] = {
+                                      ...s,
+                                      items: (s.items || []).filter((_: GenericSectionItem, i: number) => i !== itemIdx),
+                                    };
+                                    setSections(copy);
+                                  }
+                                }}
+                                className="btn-remove-compact"
+                                title="Eliminar elemento"
+                                aria-label="Eliminar elemento"
+                              >
+                                <FontAwesomeIcon icon={faTrashCan} />
+                              </button>
+                            </div>
+                            <div className="form-row">
+                              <input
+                                type="text"
+                                placeholder="Nombre / Título"
+                                value={item.name || item.title || item.language || ''}
+                                onChange={(e) => {
+                                  const copy = [...sections];
+                                  const s = copy[idx];
+                                  if (s && s.items) {
+                                    s.items[itemIdx] = {
+                                      ...s.items[itemIdx],
+                                      name: e.target.value,
+                                      title: e.target.value,
+                                    };
+                                    setSections(copy);
+                                  }
+                                }}
+                              />
+                              <input
+                                type="text"
+                                placeholder="Detalle / Institución / Nivel"
+                                value={item.issuer || item.proficiency || item.relationship || ''}
+                                onChange={(e) => {
+                                  const copy = [...sections];
+                                  const s = copy[idx];
+                                  if (s && s.items) {
+                                    s.items[itemIdx] = {
+                                      ...s.items[itemIdx],
+                                      issuer: e.target.value,
+                                      proficiency: e.target.value,
+                                    };
+                                    setSections(copy);
+                                  }
+                                }}
+                              />
+                            </div>
+                          </div>
+                        ))}
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const copy = [...sections];
+                            const s = copy[idx];
+                            if (s) {
+                              copy[idx] = {
+                                ...s,
+                                items: [...(s.items || []), { name: '' }],
+                              };
+                              setSections(copy);
+                            }
+                          }}
+                          className="btn-secondary btn-sm"
+                        >
+                          <FontAwesomeIcon icon={faPlus} />
+                          <span>Añadir Elemento</span>
                         </button>
                       </div>
                     )}
@@ -598,12 +859,27 @@ export default function CVEditor(): ReactElement {
                   <p className="a4-headline">{personalInfo.headline}</p>
                 )}
                 <div className="a4-contact-bar">
-                  {personalInfo.email && <span>✉ {personalInfo.email}</span>}
-                  {personalInfo.phone && <span>📞 {personalInfo.phone}</span>}
-                  {personalInfo.location && <span>📍 {personalInfo.location}</span>}
-                  {Array.isArray(personalInfo.links) && personalInfo.links.map((link, i) => (
-                    <span key={i}>🔗 {link.label || link.url}</span>
-                  ))}
+                  {personalInfo.email && (
+                    <span>
+                      <FontAwesomeIcon icon={faEnvelope} /> {personalInfo.email}
+                    </span>
+                  )}
+                  {personalInfo.phone && (
+                    <span>
+                      <FontAwesomeIcon icon={faPhone} /> {personalInfo.phone}
+                    </span>
+                  )}
+                  {personalInfo.location && (
+                    <span>
+                      <FontAwesomeIcon icon={faLocationDot} /> {personalInfo.location}
+                    </span>
+                  )}
+                  {Array.isArray(personalInfo.links) &&
+                    personalInfo.links.map((link, i) => (
+                      <span key={i}>
+                        <FontAwesomeIcon icon={faGlobe} /> {link.label || link.url}
+                      </span>
+                    ))}
                 </div>
               </div>
               {photoFullUrl && (
@@ -635,10 +911,13 @@ export default function CVEditor(): ReactElement {
                         {sec.items.map((item: GenericSectionItem, i: number) => (
                           <div key={i} className="a4-item">
                             <div className="a4-item-heading">
-                              <span className="a4-item-role"><strong>{item.role}</strong></span>
+                              <span className="a4-item-role">
+                                <strong>{item.role}</strong>
+                              </span>
                               <span className="a4-item-company">{item.company}</span>
                               <span className="a4-item-date">
-                                {item.period || (item.startDate ? `${item.startDate} - ${item.endDate || 'Actual'}` : '')}
+                                {item.period ||
+                                  (item.startDate ? `${item.startDate} - ${item.endDate || 'Actual'}` : '')}
                               </span>
                             </div>
                             {item.description && <p className="a4-item-desc">{item.description}</p>}
@@ -653,7 +932,9 @@ export default function CVEditor(): ReactElement {
                         {sec.items.map((item: GenericSectionItem, i: number) => (
                           <div key={i} className="a4-item">
                             <div className="a4-item-heading">
-                              <span className="a4-item-role"><strong>{item.degree}</strong></span>
+                              <span className="a4-item-role">
+                                <strong>{item.degree}</strong>
+                              </span>
                               <span className="a4-item-company">{item.institution}</span>
                               <span className="a4-item-date">
                                 {item.startDate ? `${item.startDate} - ${item.endDate || ''}` : ''}
@@ -665,14 +946,21 @@ export default function CVEditor(): ReactElement {
                       </div>
                     )}
 
-                    {/* Skills pills */}
+                    {/* Skills with internal classes for technical vs soft */}
                     {sec.type === 'skills' && Array.isArray(sec.items) && (
                       <div className="a4-skills-list">
-                        {sec.items.map((sk: GenericSectionItem, i: number) => (
-                          <span key={i} className="a4-skill-tag">
-                            {sk.name}
-                          </span>
-                        ))}
+                        {sec.items.map((sk: GenericSectionItem, i: number) => {
+                          const isSoft = sk.category === 'soft';
+                          const categoryClass = isSoft
+                            ? 'a4-skill-soft skill-soft'
+                            : 'a4-skill-technical skill-technical';
+
+                          return (
+                            <span key={i} className={`a4-skill-tag ${categoryClass}`}>
+                              {sk.name}
+                            </span>
+                          );
+                        })}
                       </div>
                     )}
 

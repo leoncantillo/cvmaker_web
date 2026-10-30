@@ -5,6 +5,14 @@ import {
   type FormEvent,
   type ReactElement,
 } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faPlus,
+  faTrashCan,
+  faSpinner,
+  faFloppyDisk,
+  faCamera,
+} from '@fortawesome/free-solid-svg-icons';
 import { env } from '../config/env';
 import { useAuth } from '../context/useAuth';
 import { apiClient, ApiError } from '../services/api/client';
@@ -209,7 +217,8 @@ export default function ProfilePage(): ReactElement {
           disabled={isSaving}
           className="btn-primary btn-save-top"
         >
-          {isSaving ? 'Guardando...' : 'Guardar Todo'}
+          <FontAwesomeIcon icon={isSaving ? faSpinner : faFloppyDisk} spin={isSaving} />
+          <span>{isSaving ? 'Guardando...' : 'Guardar Todo'}</span>
         </button>
       </div>
 
@@ -300,7 +309,8 @@ export default function ProfilePage(): ReactElement {
               </div>
               <div className="photo-actions">
                 <label className="btn-secondary file-upload-btn">
-                  {isUploadingPhoto ? 'Subiendo...' : 'Cambiar Foto (JPG/PNG <= 2MB)'}
+                  <FontAwesomeIcon icon={isUploadingPhoto ? faSpinner : faCamera} spin={isUploadingPhoto} />
+                  <span>{isUploadingPhoto ? 'Subiendo...' : 'Cambiar Foto (JPG/PNG <= 2MB)'}</span>
                   <input
                     type="file"
                     accept="image/png, image/jpeg"
@@ -412,9 +422,11 @@ export default function ProfilePage(): ReactElement {
                   <button
                     type="button"
                     onClick={() => setLinks(links.filter((_, i) => i !== idx))}
-                    className="btn-danger-sm"
+                    className="btn-remove-compact"
+                    title="Eliminar enlace"
+                    aria-label="Eliminar enlace"
                   >
-                    ✕
+                    <FontAwesomeIcon icon={faTrashCan} />
                   </button>
                 </div>
               ))}
@@ -423,7 +435,8 @@ export default function ProfilePage(): ReactElement {
                 onClick={() => setLinks([...links, { label: '', url: '' }])}
                 className="btn-secondary"
               >
-                + Añadir Enlace
+                <FontAwesomeIcon icon={faPlus} />
+                <span>+ Añadir Enlace</span>
               </button>
             </div>
           </div>
@@ -440,9 +453,11 @@ export default function ProfilePage(): ReactElement {
                   <button
                     type="button"
                     onClick={() => setExperiences(experiences.filter((_, i) => i !== idx))}
-                    className="btn-danger-sm"
+                    className="btn-remove-compact"
+                    title="Eliminar experiencia"
+                    aria-label="Eliminar experiencia"
                   >
-                    Eliminar
+                    <FontAwesomeIcon icon={faTrashCan} />
                   </button>
                 </div>
                 <div className="form-row">
@@ -541,7 +556,8 @@ export default function ProfilePage(): ReactElement {
               }
               className="btn-secondary"
             >
-              + Añadir Experiencia
+              <FontAwesomeIcon icon={faPlus} />
+              <span>+ Añadir Experiencia</span>
             </button>
           </div>
         )}
@@ -557,9 +573,11 @@ export default function ProfilePage(): ReactElement {
                   <button
                     type="button"
                     onClick={() => setEducations(educations.filter((_, i) => i !== idx))}
-                    className="btn-danger-sm"
+                    className="btn-remove-compact"
+                    title="Eliminar educación"
+                    aria-label="Eliminar educación"
                   >
-                    Eliminar
+                    <FontAwesomeIcon icon={faTrashCan} />
                   </button>
                 </div>
                 <div className="form-row">
@@ -626,7 +644,8 @@ export default function ProfilePage(): ReactElement {
               }
               className="btn-secondary"
             >
-              + Añadir Educación
+              <FontAwesomeIcon icon={faPlus} />
+              <span>+ Añadir Educación</span>
             </button>
           </div>
         )}
@@ -671,9 +690,11 @@ export default function ProfilePage(): ReactElement {
                   <button
                     type="button"
                     onClick={() => setSkills(skills.filter((_, i) => i !== idx))}
-                    className="btn-danger-sm"
+                    className="btn-remove-compact"
+                    title="Eliminar habilidad"
+                    aria-label="Eliminar habilidad"
                   >
-                    ✕
+                    <FontAwesomeIcon icon={faTrashCan} />
                   </button>
                 </div>
               ))}
@@ -688,7 +709,8 @@ export default function ProfilePage(): ReactElement {
               }
               className="btn-secondary"
             >
-              + Añadir Habilidad
+              <FontAwesomeIcon icon={faPlus} />
+              <span>+ Añadir Habilidad</span>
             </button>
           </div>
         )}
@@ -704,9 +726,11 @@ export default function ProfilePage(): ReactElement {
                   <button
                     type="button"
                     onClick={() => setCertifications(certifications.filter((_, i) => i !== idx))}
-                    className="btn-danger-sm"
+                    className="btn-remove-compact"
+                    title="Eliminar certificación"
+                    aria-label="Eliminar certificación"
                   >
-                    Eliminar
+                    <FontAwesomeIcon icon={faTrashCan} />
                   </button>
                 </div>
                 <div className="form-row">
@@ -755,7 +779,8 @@ export default function ProfilePage(): ReactElement {
               }
               className="btn-secondary"
             >
-              + Añadir Certificación
+              <FontAwesomeIcon icon={faPlus} />
+              <span>+ Añadir Certificación</span>
             </button>
           </div>
         )}
@@ -795,9 +820,11 @@ export default function ProfilePage(): ReactElement {
                 <button
                   type="button"
                   onClick={() => setLanguages(languages.filter((_, i) => i !== idx))}
-                  className="btn-danger-sm"
+                  className="btn-remove-compact"
+                  title="Eliminar idioma"
+                  aria-label="Eliminar idioma"
                 >
-                  ✕
+                  <FontAwesomeIcon icon={faTrashCan} />
                 </button>
               </div>
             ))}
@@ -811,7 +838,8 @@ export default function ProfilePage(): ReactElement {
               }
               className="btn-secondary"
             >
-              + Añadir Idioma
+              <FontAwesomeIcon icon={faPlus} />
+              <span>+ Añadir Idioma</span>
             </button>
           </div>
         )}
@@ -827,9 +855,11 @@ export default function ProfilePage(): ReactElement {
                   <button
                     type="button"
                     onClick={() => setProjects(projects.filter((_, i) => i !== idx))}
-                    className="btn-danger-sm"
+                    className="btn-remove-compact"
+                    title="Eliminar proyecto"
+                    aria-label="Eliminar proyecto"
                   >
-                    Eliminar
+                    <FontAwesomeIcon icon={faTrashCan} />
                   </button>
                 </div>
                 <div className="form-group">
@@ -891,7 +921,8 @@ export default function ProfilePage(): ReactElement {
               }
               className="btn-secondary"
             >
-              + Añadir Proyecto
+              <FontAwesomeIcon icon={faPlus} />
+              <span>+ Añadir Proyecto</span>
             </button>
           </div>
         )}
@@ -931,9 +962,11 @@ export default function ProfilePage(): ReactElement {
                 <button
                   type="button"
                   onClick={() => setAchievements(achievements.filter((_, i) => i !== idx))}
-                  className="btn-danger-sm"
+                  className="btn-remove-compact"
+                  title="Eliminar logro"
+                  aria-label="Eliminar logro"
                 >
-                  ✕
+                  <FontAwesomeIcon icon={faTrashCan} />
                 </button>
               </div>
             ))}
@@ -947,7 +980,8 @@ export default function ProfilePage(): ReactElement {
               }
               className="btn-secondary"
             >
-              + Añadir Logro
+              <FontAwesomeIcon icon={faPlus} />
+              <span>+ Añadir Logro</span>
             </button>
           </div>
         )}
@@ -963,9 +997,11 @@ export default function ProfilePage(): ReactElement {
                   <button
                     type="button"
                     onClick={() => setReferences(references.filter((_, i) => i !== idx))}
-                    className="btn-danger-sm"
+                    className="btn-remove-compact"
+                    title="Eliminar referencia"
+                    aria-label="Eliminar referencia"
                   >
-                    Eliminar
+                    <FontAwesomeIcon icon={faTrashCan} />
                   </button>
                 </div>
                 <div className="form-row">
@@ -1030,7 +1066,8 @@ export default function ProfilePage(): ReactElement {
               }
               className="btn-secondary"
             >
-              + Añadir Referencia
+              <FontAwesomeIcon icon={faPlus} />
+              <span>+ Añadir Referencia</span>
             </button>
           </div>
         )}
@@ -1043,7 +1080,8 @@ export default function ProfilePage(): ReactElement {
           disabled={isSaving}
           className="btn-primary"
         >
-          {isSaving ? 'Guardando Cambios...' : 'Guardar Todos los Cambios'}
+          <FontAwesomeIcon icon={isSaving ? faSpinner : faFloppyDisk} spin={isSaving} />
+          <span>{isSaving ? 'Guardando Cambios...' : 'Guardar Todos los Cambios'}</span>
         </button>
       </div>
     </div>

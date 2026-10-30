@@ -1,5 +1,14 @@
 import { useEffect, useState, type ReactElement } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faPlus,
+  faPenToSquare,
+  faCopy,
+  faTrashCan,
+  faFileLines,
+  faSpinner,
+} from '@fortawesome/free-solid-svg-icons';
 import { apiClient, ApiError } from '../services/api/client';
 import type { CVHeader } from '../services/api/types';
 
@@ -76,7 +85,12 @@ export default function Dashboard(): ReactElement {
   };
 
   if (isLoading) {
-    return <div className="loading-banner">Cargando tus currículums...</div>;
+    return (
+      <div className="loading-banner">
+        <FontAwesomeIcon icon={faSpinner} spin />
+        <span>Cargando tus currículums...</span>
+      </div>
+    );
   }
 
   return (
@@ -92,7 +106,8 @@ export default function Dashboard(): ReactElement {
           disabled={isCreating}
           className="btn-primary btn-create-cv"
         >
-          {isCreating ? 'Creando CV...' : '+ Crear Nuevo CV'}
+          <FontAwesomeIcon icon={isCreating ? faSpinner : faPlus} spin={isCreating} />
+          <span>{isCreating ? 'Creando CV...' : '+ Crear Nuevo CV'}</span>
         </button>
       </div>
 
@@ -104,7 +119,9 @@ export default function Dashboard(): ReactElement {
 
       {cvs.length === 0 ? (
         <div className="empty-state-card">
-          <div className="empty-icon">📄</div>
+          <div className="empty-icon">
+            <FontAwesomeIcon icon={faFileLines} />
+          </div>
           <h3>Aún no has creado ningún currículum</h3>
           <p>
             Haz clic en <strong>Crear Nuevo CV</strong> para comenzar. Importaremos automáticamente
@@ -116,7 +133,8 @@ export default function Dashboard(): ReactElement {
             disabled={isCreating}
             className="btn-primary"
           >
-            Comenzar Ahora
+            <FontAwesomeIcon icon={faPlus} />
+            <span>Comenzar Ahora</span>
           </button>
         </div>
       ) : (
@@ -136,21 +154,26 @@ export default function Dashboard(): ReactElement {
                   onClick={() => { void navigate(`/cvs/${item.id}`); }}
                   className="btn-primary btn-sm"
                 >
-                  Editar y Vista Previa
+                  <FontAwesomeIcon icon={faPenToSquare} />
+                  <span>Editar y Vista Previa</span>
                 </button>
                 <button
                   type="button"
                   onClick={() => { void handleDuplicateCV(item.id); }}
                   className="btn-secondary btn-sm"
+                  title="Duplicar CV"
                 >
-                  Duplicar
+                  <FontAwesomeIcon icon={faCopy} />
+                  <span>Duplicar</span>
                 </button>
                 <button
                   type="button"
                   onClick={() => { void handleDeleteCV(item.id, item.title); }}
-                  className="btn-danger-sm"
+                  className="btn-danger-sm btn-icon-compact"
+                  title="Eliminar CV"
+                  aria-label="Eliminar CV"
                 >
-                  Eliminar
+                  <FontAwesomeIcon icon={faTrashCan} />
                 </button>
               </div>
             </div>

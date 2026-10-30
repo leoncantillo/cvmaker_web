@@ -1,31 +1,203 @@
+// Variables de Diseño y Paleta de Colores
 
-// Modo oscuro (por defecto)
+// Modo oscuro (base / por defecto)
 :root {
-  --button-bg: #1a1a1a;
-  --button-border-hover: #646cff;
-  --color-bg: #242424;
-  --color-link: #646cff;
-  --color-link-hover: #535bf2;
-  --color-text: rgba(255, 255, 255, 0.87);
+  --color-bg: #18181b;
+  --surface-card: #27272a;
+  --surface-subtle: #202023;
+  --surface-hover: #3f3f46;
+  --color-border: #3f3f46;
+  --color-border-subtle: #2d2d32;
 
-  --button-text-color: var(--color-text);
+  --color-text: rgba(255, 255, 255, 0.90);
+  --color-text-muted: #a1a1aa;
+  --color-text-heading: #f4f4f5;
+
+  --input-bg: #1c1c20;
+  --input-border: #3f3f46;
+  --input-text: #f4f4f5;
+  --input-border-focus: #6366f1;
+
+  --button-bg: #27272a;
+  --button-text-color: #f4f4f5;
+  --button-border: #3f3f46;
+  --button-border-hover: #6366f1;
+
+  --color-link: #818cf8;
+  --color-link-hover: #a5b4fc;
+
+  --color-primary: #6366f1;
+  --color-primary-hover: #4f46e5;
+  --color-primary-text: #ffffff;
+  --color-primary-subtle: rgba(99, 102, 241, 0.15);
+
+  --dropdown-bg: #27272a;
+  --dropdown-border: #3f3f46;
+  --dropdown-hover: #3f3f46;
+  --dropdown-text: #f4f4f5;
+
+  --color-danger: #f87171;
+  --color-danger-hover: #ef4444;
+  --color-danger-subtle: rgba(239, 68, 68, 0.15);
+
+  --badge-tech-bg: #0f283d;
+  --badge-tech-text: #38bdf8;
+  --badge-soft-bg: #2e1065;
+  --badge-soft-text: #c084fc;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.35);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.45);
 }
 
 // Modo claro por preferencia del sistema
 @media (prefers-color-scheme: light) {
   :root {
-    --button-bg: #f9f9f9;
-    --color-bg: #ffffff;
-    --color-link-hover: #747bff;
-    --color-text: #213547;
+    --color-bg: #f8fafc;
+    --surface-card: #ffffff;
+    --surface-subtle: #f1f5f9;
+    --surface-hover: #e2e8f0;
+    --color-border: #e2e8f0;
+    --color-border-subtle: #f1f5f9;
+
+    --color-text: #1e293b;
+    --color-text-muted: #64748b;
+    --color-text-heading: #0f172a;
+
+    --input-bg: #ffffff;
+    --input-border: #cbd5e1;
+    --input-text: #0f172a;
+    --input-border-focus: #6366f1;
+
+    --button-bg: #f1f5f9;
+    --button-text-color: #1e293b;
+    --button-border: #cbd5e1;
+    --button-border-hover: #6366f1;
+
+    --color-link: #4f46e5;
+    --color-link-hover: #4338ca;
+
+    --color-primary: #6366f1;
+    --color-primary-hover: #4f46e5;
+    --color-primary-text: #ffffff;
+    --color-primary-subtle: rgba(99, 102, 241, 0.1);
+
+    --dropdown-bg: #ffffff;
+    --dropdown-border: #e2e8f0;
+    --dropdown-hover: #f8fafc;
+    --dropdown-text: #1e293b;
+
+    --color-danger: #dc2626;
+    --color-danger-hover: #b91c1c;
+    --color-danger-subtle: #fee2e2;
+
+    --badge-tech-bg: #e0f2fe;
+    --badge-tech-text: #0369a1;
+    --badge-soft-bg: #f3e8ff;
+    --badge-soft-text: #7e22ce;
+
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+    --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
   }
 }
 
 // Modo claro forzado manualmente
 html.light {
-  --button-bg: #f9f9f9;
-  --color-bg: #ffffff;
-  --color-link-hover: #747bff;
-  --color-text: #213547;
-  --button-text-color: var(--color-text);
+  --color-bg: #f8fafc;
+  --surface-card: #ffffff;
+  --surface-subtle: #f1f5f9;
+  --surface-hover: #e2e8f0;
+  --color-border: #e2e8f0;
+  --color-border-subtle: #f1f5f9;
+
+  --color-text: #1e293b;
+  --color-text-muted: #64748b;
+  --color-text-heading: #0f172a;
+
+  --input-bg: #ffffff;
+  --input-border: #cbd5e1;
+  --input-text: #0f172a;
+  --input-border-focus: #6366f1;
+
+  --button-bg: #f1f5f9;
+  --button-text-color: #1e293b;
+  --button-border: #cbd5e1;
+  --button-border-hover: #6366f1;
+
+  --color-link: #4f46e5;
+  --color-link-hover: #4338ca;
+
+  --color-primary: #6366f1;
+  --color-primary-hover: #4f46e5;
+  --color-primary-text: #ffffff;
+  --color-primary-subtle: rgba(99, 102, 241, 0.1);
+
+  --dropdown-bg: #ffffff;
+  --dropdown-border: #e2e8f0;
+  --dropdown-hover: #f8fafc;
+  --dropdown-text: #1e293b;
+
+  --color-danger: #dc2626;
+  --color-danger-hover: #b91c1c;
+  --color-danger-subtle: #fee2e2;
+
+  --badge-tech-bg: #e0f2fe;
+  --badge-tech-text: #0369a1;
+  --badge-soft-bg: #f3e8ff;
+  --badge-soft-text: #7e22ce;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+// Modo oscuro forzado manualmente
+html.dark {
+  --color-bg: #18181b;
+  --surface-card: #27272a;
+  --surface-subtle: #202023;
+  --surface-hover: #3f3f46;
+  --color-border: #3f3f46;
+  --color-border-subtle: #2d2d32;
+
+  --color-text: rgba(255, 255, 255, 0.90);
+  --color-text-muted: #a1a1aa;
+  --color-text-heading: #f4f4f5;
+
+  --input-bg: #1c1c20;
+  --input-border: #3f3f46;
+  --input-text: #f4f4f5;
+  --input-border-focus: #6366f1;
+
+  --button-bg: #27272a;
+  --button-text-color: #f4f4f5;
+  --button-border: #3f3f46;
+  --button-border-hover: #6366f1;
+
+  --color-link: #818cf8;
+  --color-link-hover: #a5b4fc;
+
+  --color-primary: #6366f1;
+  --color-primary-hover: #4f46e5;
+  --color-primary-text: #ffffff;
+  --color-primary-subtle: rgba(99, 102, 241, 0.15);
+
+  --dropdown-bg: #27272a;
+  --dropdown-border: #3f3f46;
+  --dropdown-hover: #3f3f46;
+  --dropdown-text: #f4f4f5;
+
+  --color-danger: #f87171;
+  --color-danger-hover: #ef4444;
+  --color-danger-subtle: rgba(239, 68, 68, 0.15);
+
+  --badge-tech-bg: #0f283d;
+  --badge-tech-text: #38bdf8;
+  --badge-soft-bg: #2e1065;
+  --badge-soft-text: #c084fc;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.35);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.45);
 }

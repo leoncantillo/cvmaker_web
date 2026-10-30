@@ -1061,7 +1061,7 @@ export default function ProfilePage(): ReactElement {
               onClick={() =>
                 setReferences([
                   ...references,
-                  { id: `ref-${Date.now()}`, name: '', company: '' },
+                  { id: `ref-${Date.now()}`, name: '', company: '', contact: '' },
                 ])
               }
               className="btn-secondary"

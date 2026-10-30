@@ -97,7 +97,7 @@ describe('Frontend Auth & Profile UI', () => {
     expect(screen.getByText('Las contraseñas no coinciden.')).toBeInTheDocument();
   });
 
-  it('loads profile and updates profile fields', async () => {
+  it('loads profile and updates basic and professional fields', async () => {
     vi.spyOn(apiClient, 'getProfile').mockResolvedValueOnce({
       profile: {
         id: 'p-1',
@@ -109,6 +109,9 @@ describe('Frontend Auth & Profile UI', () => {
         bio: 'Mi bio',
         photoUrl: null,
         links: [{ label: 'GitHub', url: 'https://github.com/ana' }],
+        experiences: [],
+        educations: [],
+        skills: [],
       },
     });
 
@@ -123,17 +126,16 @@ describe('Frontend Auth & Profile UI', () => {
         bio: 'Mi bio',
         photoUrl: null,
         links: [{ label: 'GitHub', url: 'https://github.com/ana' }],
+        experiences: [],
+        educations: [],
+        skills: [],
       },
     });
-
-    function TestProfileWrapper() {
-      return <ProfilePage />;
-    }
 
     render(
       <AuthProvider>
         <HashRouter>
-          <TestProfileWrapper />
+          <ProfilePage />
         </HashRouter>
       </AuthProvider>,
     );
@@ -147,7 +149,7 @@ describe('Frontend Auth & Profile UI', () => {
       target: { value: 'Ana María Gómez' },
     });
 
-    fireEvent.click(screen.getByRole('button', { name: 'Guardar Cambios' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Guardar Todo' }));
 
     await waitFor(() => {
       expect(updateSpy).toHaveBeenCalledWith(
@@ -155,5 +157,42 @@ describe('Frontend Auth & Profile UI', () => {
       );
       expect(screen.getByText('Perfil actualizado exitosamente.')).toBeInTheDocument();
     });
+  });
+
+  it('navigates to experience tab and allows adding an experience', async () => {
+    vi.spyOn(apiClient, 'getProfile').mockResolvedValueOnce({
+      profile: {
+        id: 'p-1',
+        userId: 'u-1',
+        fullName: 'Ana Gómez',
+        headline: 'Architect',
+        phone: null,
+        location: null,
+        bio: null,
+        photoUrl: null,
+        links: [],
+        experiences: [],
+      },
+    });
+
+    render(
+      <AuthProvider>
+        <HashRouter>
+          <ProfilePage />
+        </HashRouter>
+      </AuthProvider>,
+    );
+
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: /experiencia/i })).toBeInTheDocument();
+    });
+
+    fireEvent.click(screen.getByRole('button', { name: /experiencia/i }));
+
+    expect(screen.getByRole('button', { name: '+ Añadir Experiencia' })).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole('button', { name: '+ Añadir Experiencia' }));
+
+    expect(screen.getByPlaceholderText('Empresa o cliente')).toBeInTheDocument();
   });
 });
